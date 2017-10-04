@@ -1,2 +1,2 @@
 # PyTorchZeroToAll
-Call for comments!
+Quick meterials for HKUST students. Please give us comments.

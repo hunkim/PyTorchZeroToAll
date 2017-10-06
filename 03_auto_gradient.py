@@ -32,8 +32,7 @@ for epoch in range(10):
         print("\tgrad: ", x_val, y_val, w.grad.data[0])
         w.data = w.data - 0.01 * w.grad.data
 
-        # Manually zero the gradients after running the backward pass and
-        # update w
+        # Manually zero the gradients after updating weights
         w.grad.data.zero_()
 
     print("progress:", epoch, l.data[0])

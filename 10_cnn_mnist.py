@@ -44,7 +44,7 @@ class Net(nn.Module):
         in_size = x.size(0)
         x = F.relu(self.mp(self.conv1(x)))
         x = F.relu(self.mp(self.conv2(x)))
-        x = x.view(in_size, -1) # flatten the tensor
+        x = x.view(in_size, -1)  # flatten the tensor
         x = self.fc(x)
         return F.log_softmax(x)
 

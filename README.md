@@ -1,7 +1,7 @@
 # PyTorchZeroToAll
 Quick 3~4 day lecture meterials for HKUST students.  
 
-* [Lecture Slides](http://bit.ly/PyTorchZeroAll ). 
+* [Lecture Slides](http://bit.ly/PyTorchZeroAll )
 
 Please give us comments in Issues!
 

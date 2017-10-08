@@ -1,2 +1,5 @@
 .idea
-.key
+*.key
+*.pdf
+X*
+data

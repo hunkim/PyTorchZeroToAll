@@ -3,3 +3,5 @@
 *.pdf
 X*
 data
+ppts
+client_secret.json

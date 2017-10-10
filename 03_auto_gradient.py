@@ -1,7 +1,5 @@
 import torch
-from torch import nn
 from torch.autograd import Variable
-
 
 x_data = [1.0, 2.0, 3.0]
 y_data = [2.0, 4.0, 6.0]
@@ -9,14 +7,10 @@ y_data = [2.0, 4.0, 6.0]
 w = Variable(torch.Tensor([1.0]),  requires_grad=True)  # Any random value
 
 # our model forward pass
-
-
 def forward(x):
     return x * w
 
 # Loss function
-
-
 def loss(x, y):
     y_pred = forward(x)
     return (y_pred - y) * (y_pred - y)

@@ -5,7 +5,7 @@ x_data = [1.0, 2.0, 3.0]
 y_data = [2.0, 4.0, 6.0]
 
 
-# our model forward pass
+# our model for the forward pass
 def forward(x):
     return x * w
 
@@ -27,7 +27,7 @@ for w in np.arange(0.0, 4.1, 0.1):
         l = loss(x_val, y_val)
         l_sum += l
         print("\t", x_val, y_val, y_pred_val, l)
-    print("NSE=", l_sum / 3)
+    print("MSE=", l_sum / 3)
     w_list.append(w)
     mse_list.append(l_sum / 3)
 

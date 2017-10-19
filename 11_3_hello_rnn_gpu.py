@@ -23,6 +23,10 @@ y_data = [1, 0, 2, 3, 3, 4]    # ihello
 inputs = Variable(torch.Tensor(x_one_hot))
 labels = Variable(torch.LongTensor(y_data))
 
+if torch.cuda.is_available():
+    inputs.cuda()
+    labels.cuda()
+
 num_classes = 5
 input_size = 5  # one-hot size
 hidden_size = 5  # output from the LSTM. 5 to directly predict one-hot
@@ -48,6 +52,8 @@ class RNN(nn.Module):
         # Initialize hidden and cell states
         h_0 = Variable(torch.zeros(
             x.size(0), self.num_layers, self.hidden_size))
+        if torch.cuda.is_available():
+            h_0.cuda()
 
         # Reshape input
         x.view(x.size(0), self.sequence_length, self.input_size)
@@ -62,6 +68,9 @@ class RNN(nn.Module):
 
 # Instantiate RNN model
 rnn = RNN(num_classes, input_size, hidden_size, num_layers)
+if torch.cuda.is_available():
+    rnn.cuda()
+
 print(rnn)
 
 # Set loss and optimizer function

@@ -24,8 +24,8 @@ inputs = Variable(torch.Tensor(x_one_hot))
 labels = Variable(torch.LongTensor(y_data))
 
 if torch.cuda.is_available():
-    inputs.cuda()
-    labels.cuda()
+    inputs = inputs.cuda()
+    labels = labels.cuda()
 
 num_classes = 5
 input_size = 5  # one-hot size
@@ -53,7 +53,7 @@ class RNN(nn.Module):
         h_0 = Variable(torch.zeros(
             x.size(0), self.num_layers, self.hidden_size))
         if torch.cuda.is_available():
-            h_0.cuda()
+            h_0 = h_0.cuda()
 
         # Reshape input
         x.view(x.size(0), self.sequence_length, self.input_size)
@@ -86,7 +86,7 @@ for epoch in range(100):
     loss.backward()
     optimizer.step()
     _, idx = outputs.max(1)
-    idx = idx.data.numpy()
+    idx = idx.data.cpu().numpy()
     result_str = [idx2char[c] for c in idx.squeeze()]
     print("epoch: %d, loss: %1.3f" % (epoch + 1, loss.data[0]))
     print("Predicted string: ", ''.join(result_str))

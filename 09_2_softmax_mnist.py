@@ -46,7 +46,7 @@ class Net(nn.Module):
         x = F.relu(self.l2(x))
         x = F.relu(self.l3(x))
         x = F.relu(self.l4(x))
-        x = F.relu(self.l5(x))
+        x = self.l5(x)
         return F.log_softmax(x)
 
 

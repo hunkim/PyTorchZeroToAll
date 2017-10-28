@@ -51,4 +51,5 @@ for epoch in range(500):
 
 # After training
 hour_var = Variable(torch.Tensor([[4.0]]))
-print("predict (after training)",  4, model.forward(hour_var).data[0][0])
+y_pred = model(hour_var)
+print("predict (after training)",  4, model(hour_var).data[0][0])

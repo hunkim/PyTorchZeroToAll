@@ -1,8 +1,9 @@
-#nsml: varunagrawal/pytorch
+#nonsml: digitalgenius/ubuntu-pytorch
+#varunagrawal/pytorch
 httplib2==0.10.3
 matplotlib==2.0.0
 numpy==1.13.3
-#torch==0.2.0.post3
+torch
 torchvision==0.1.9
 Unidecode==0.04.21
 google_api_python_client==1.6.4

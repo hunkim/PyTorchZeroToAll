@@ -46,12 +46,12 @@ class Net(nn.Module):
         x = F.relu(self.l2(x))
         x = F.relu(self.l3(x))
         x = F.relu(self.l4(x))
-        x = self.l5(x)
-        return F.log_softmax(x)
+        return self.l5(x)
 
 
 model = Net()
 
+criterion = nn.CrossEntropyLoss()
 optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.5)
 
 
@@ -61,7 +61,7 @@ def train(epoch):
         data, target = Variable(data), Variable(target)
         optimizer.zero_grad()
         output = model(data)
-        loss = F.nll_loss(output, target)
+        loss = criterion(output, target)
         loss.backward()
         optimizer.step()
         if batch_idx % 10 == 0:
@@ -78,8 +78,8 @@ def test():
         data, target = Variable(data, volatile=True), Variable(target)
         output = model(data)
         # sum up batch loss
-        test_loss += F.nll_loss(output, target, size_average=False).data[0]
-        # get the index of the max log-probability
+        test_loss += criterion(output, target, size_average=False).data[0]
+        # get the index of the max
         pred = output.data.max(1, keepdim=True)[1]
         correct += pred.eq(target.data.view_as(pred)).cpu().sum()
 

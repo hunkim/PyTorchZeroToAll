@@ -19,6 +19,7 @@ x_one_hot = [[[1, 0, 0, 0, 0],   # h 0
 
 y_data = [1, 0, 2, 3, 3, 4]    # ihello
 
+
 def to_var(x):
     if torch.cuda.is_available():
         x = x.cuda()
@@ -38,6 +39,7 @@ num_layers = 1  # one-layer rnn
 
 
 class RNN(nn.Module):
+
     def __init__(self, num_classes, input_size, hidden_size, num_layers):
         super(RNN, self).__init__()
 

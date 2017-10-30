@@ -1,9 +1,11 @@
 # PyTorchZeroToAll
 Quick 3~4 day lecture materials for HKUST students.
 
-* Video Lectures: CNN, RNN TBA)]
-** [Youtube](http://bit.ly/PyTorchVideo)
-** [Bilibili](https://www.bilibili.com/video/av15823922/)
+## Video Lectures: CNN, RNN TBA)]
+* [Youtube](http://bit.ly/PyTorchVideo)
+* [Bilibili](https://www.bilibili.com/video/av15823922/)
+
+## Slides
 * [Lecture Slides @GoogleDrive](http://bit.ly/PyTorchZeroAll)
 
 If you cannot access the GoogleDoc for somehow, please check out pdf files in slides. However, slides in GoogleDrive are always latest. We really appreciate your comments.

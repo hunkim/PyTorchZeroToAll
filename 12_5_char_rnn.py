@@ -17,15 +17,6 @@ filename = 'shakespeare.txt'
 n_characters = 128  # Ascii
 
 
-def char2tensor(string):
-    tensor = [ord(c) for c in string]
-    tensor = torch.LongTensor(tensor)
-
-    if torch.cuda.is_available():
-        tensor = tensor.cuda()
-
-    return Variable(tensor)
-
 class RNN(nn.Module):
 
     def __init__(self, input_size, hidden_size, output_size, n_layers=1):
@@ -54,9 +45,19 @@ class RNN(nn.Module):
         return Variable(hidden)
 
 
+def str2tensor(str):
+    tensor = [ord(c) for c in str]
+    tensor = torch.LongTensor(tensor)
+
+    if torch.cuda.is_available():
+        tensor = tensor.cuda()
+
+    return Variable(tensor)
+
+
 def generate(decoder, prime_str='A', predict_len=100, temperature=0.8):
     hidden = decoder.init_hidden()
-    prime_input = char2tensor(prime_str)
+    prime_input = str2tensor(prime_str)
     predicted = prime_str
 
     # Use priming string to "build up" hidden state
@@ -75,14 +76,19 @@ def generate(decoder, prime_str='A', predict_len=100, temperature=0.8):
         # Add predicted character to string and use as next input
         predicted_char = chr(top_i)
         predicted += predicted_char
-        inp = char2tensor(predicted_char)
+        inp = str2tensor(predicted_char)
 
     return predicted
 
+# Train for a given src and target
+# It feeds single string to demonstrate seq2seq
+# It's extremely slow, and we need to use (1) batch and (2) data parallelism
+# http://pytorch.org/tutorials/beginner/former_torchies/parallelism_tutorial.html.
+
 
 def train(line):
-    input = char2tensor(line[:-1])
-    target = char2tensor(line[1:])
+    input = str2tensor(line[:-1])
+    target = str2tensor(line[1:])
 
     hidden = decoder.init_hidden()
     decoder.zero_grad()
@@ -113,13 +119,13 @@ criterion = nn.CrossEntropyLoss()
 
 
 train_loader = DataLoader(dataset=TextDataset(),
-                              batch_size=batch_size,
-                              shuffle=True)
+                          batch_size=batch_size,
+                          shuffle=True)
 
 
 try:
     print("Training for %d epochs..." % n_epochs)
-    for epoch in range(1, n_epochs+1):
+    for epoch in range(1, n_epochs + 1):
         for i, (lines, _) in enumerate(train_loader):
             for line in lines:
                 loss = train(line)

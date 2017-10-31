@@ -7,11 +7,13 @@ from torch.utils.data import Dataset, DataLoader
 
 class TextDataset(Dataset):
     # Initialize your data, download, etc.
+
     def __init__(self, filename="shakespeare.txt.gz"):
         self.len = 0
         with gzip.open(filename, 'rt') as f:
             self.targetLines = [x.strip() for x in f if x.strip()]
-            self.srcLines = [x.lower().replace(' ', '') for x in self.targetLines]
+            self.srcLines = [x.lower().replace(' ', '')
+                             for x in self.targetLines]
             self.len = len(self.srcLines)
 
     def __getitem__(self, index):

@@ -43,7 +43,8 @@ def test():
 
     word_target = str2tensor('pytorch')
     for c in range(len(word_target)):
-        decoder_output, decoder_hidden = decoder(word_target[c], decoder_hidden)
+        decoder_output, decoder_hidden = decoder(
+            word_target[c], decoder_hidden)
         print(decoder_output.size(), decoder_hidden.size())
 
 
@@ -134,13 +135,13 @@ train_loader = DataLoader(dataset=TextDataset(),
                           num_workers=2)
 
 print("Training for %d epochs..." % N_EPOCHES)
-for epoch in range(1, N_EPOCHES+1):
+for epoch in range(1, N_EPOCHES + 1):
     # Get srcs and targets from data loader
     for i, (srcs, targets) in enumerate(train_loader):
-        for src, target in zip (srcs, targets):
+        for src, target in zip(srcs, targets):
             train_loss = train(src, target)
 
-        print('[(%d %d%%) %.4f]' % (epoch, epoch / N_EPOCHES * 100, train_loss))
+        print('[(%d %d%%) %.4f]' %
+              (epoch, epoch / N_EPOCHES * 100, train_loss))
         print(translate(srcs[0]), '\n')
         print(translate(), '\n')
-

@@ -105,18 +105,8 @@ def translate(enc_input='thisissungkim.iloveyou.', predict_len=100, temperature=
     return enc_input, predicted
 
 
-args = argparse.ArgumentParser()
-args.add_argument('--att', type=bool, default=False)
-config = args.parse_args()
-
 encoder = sm.EncoderRNN(N_CHARS, HIDDEN_SIZE, N_LAYERS)
-
-if config.att:
-    print("Using Attention")
-    decoder = sm.AttnDecoderRNN(HIDDEN_SIZE, N_CHARS, N_LAYERS)
-else:
-    print("No Attention")
-    decoder = sm.DecoderRNN(HIDDEN_SIZE, N_CHARS, N_LAYERS)
+decoder = sm.DecoderRNN(HIDDEN_SIZE, N_CHARS, N_LAYERS)
 
 if torch.cuda.is_available():
     decoder.cuda()

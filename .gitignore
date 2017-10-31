@@ -1,7 +1,11 @@
 .idea
 *.key
 *.pdf
+.nsml*
+*.pt
 X*
 data
 ppts
 client_secret.json
+__pycache__/
+tmp

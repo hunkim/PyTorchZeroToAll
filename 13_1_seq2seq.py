@@ -63,6 +63,8 @@ def train(src, target):
     loss = 0
 
     for c in range(len(target_var)):
+        # First, we feed SOS
+        # Others, we use teacher forcing
         token = target_var[c - 1] if c else str2tensor(SOS_token)
         output, hidden = decoder(token, hidden)
         loss += criterion(output, target_var[c])

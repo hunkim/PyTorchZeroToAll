@@ -7,7 +7,7 @@ import seq2seq_models as sm
 from seq2seq_models import str2tensor, EOS_token, SOS_token
 
 HIDDEN_SIZE = 100
-N_LAYERS = 3
+N_LAYERS = 1
 BATCH_SIZE = 32
 N_EPOCH = 100
 N_CHARS = 128  # ASCII

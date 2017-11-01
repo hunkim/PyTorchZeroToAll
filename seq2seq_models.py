@@ -71,14 +71,14 @@ class DecoderRNN(nn.Module):
         self.embedding = nn.Embedding(output_size, hidden_size)
         self.gru = nn.GRU(hidden_size, hidden_size, n_layers)
         self.out = nn.Linear(hidden_size, output_size)
-        self.softmax = nn.LogSoftmax()
 
     def forward(self, input, hidden):
         # input shape: S(=1) x B (=1) x I (input size)
         # Note: we run this one step at a time. (Sequence size = 1)
         output = self.embedding(input).view(1, 1, -1)
         output, hidden = self.gru(output, hidden)
-        output = self.softmax(self.out(output[0]))
+        output = self.out(output[0])
+        # No need softmax, since we are using CrossEntropyLoss
         return output, hidden
 
     def init_hidden(self):
@@ -111,8 +111,8 @@ class Attn(nn.Module):
         for i in range(seq_len):
             attn_energies[i] = self.score(hidden, encoder_outputs[i])
 
-        # Normalize energies to weights in range 0 to 1, resize to 1 x 1 x
-        # seq_len
+        # Normalize energies to weights in range 0 to 1,
+        # resize to 1 x 1 x seq_len
         return F.softmax(attn_energies).unsqueeze(0).unsqueeze(0)
 
     def score(self, hidden, encoder_output):
@@ -173,7 +173,7 @@ class AttnDecoderRNN(nn.Module):
         # and context vector
         rnn_output = rnn_output.squeeze(0)  # S(=1) x B x I -> B x I
         context = context.squeeze(1)  # B x S(=1) x I -> B x I
-        output = F.log_softmax(self.out(torch.cat((rnn_output, context), 1)))
+        output = self.out(torch.cat((rnn_output, context), 1))
 
         # Return final output, hidden state, and attention weights (for
         # visualization)

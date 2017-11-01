@@ -46,6 +46,7 @@ class RNN(nn.Module):
 
     def forward(self, x):
         # Initialize hidden and cell states
+        # (batch, num_layers * num_directions, hidden_size) for batch_first=True
         h_0 = Variable(torch.zeros(
             x.size(0), self.num_layers, self.hidden_size))
 

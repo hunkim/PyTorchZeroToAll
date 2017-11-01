@@ -12,6 +12,7 @@ o = [0, 0, 0, 1]
 cell = nn.RNN(input_size=4, hidden_size=2, batch_first=True)
 
 # (num_layers * num_directions, batch, hidden_size)
+# (batch, num_layers * num_directions, hidden_size) for batch_first=True
 hidden = (Variable(torch.randn(1, 1, 2)))
 
 # Propagate input through RNN
@@ -42,5 +43,6 @@ print("input size", inputs.size())  # input size torch.Size([3, 5, 4])
 
 # Propagate input through RNN
 # Input: (batch, seq_len, input_size) when batch_first=True
+# B x S x I
 out, hidden = cell(inputs, hidden)
 print("out size", out.size())  # out size torch.Size([3, 5, 2])

@@ -1,3 +1,4 @@
+# Original code from
 # https://github.com/spro/practical-pytorch/blob/master/seq2seq-translation/seq2seq-translation.ipynb
 import torch
 import torch.nn as nn

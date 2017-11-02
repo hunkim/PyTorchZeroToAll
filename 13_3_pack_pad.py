@@ -1,5 +1,5 @@
 # Original source from
-# https://www.snip2code.com/Snippet/1950100/How-to-use-pad_packed_sequence-in-pytorcimport
+# https://gist.github.com/Tushar-N/dfca335e370a2bc3bc79876e6270099e
 # torch
 import torch
 import torch.nn as nn
@@ -19,9 +19,9 @@ seqs = ['ghatmasala', 'nicela', 'chutpakodas']
 vocab = ['<pad>'] + sorted(list(set(flatten(seqs))))
 
 # make model
-embad_size = 3
-embed = nn.Embedding(len(vocab), embad_size)
-lstm = nn.LSTM(embad_size, 5)
+embedding_size = 3
+embed = nn.Embedding(len(vocab), embedding_size)
+lstm = nn.LSTM(embedding_size, 5)
 
 vectorized_seqs = [[vocab.index(tok) for tok in seq]for seq in seqs]
 print("vectorized_seqs", vectorized_seqs)

@@ -44,11 +44,11 @@ def cuda_variable(tensor):
         return Variable(tensor)
 
 
-# Sting to char tensor
+# pad sequences and sort the tensor
 def pad_sequences(vectorized_seqs, seq_lengths, countries):
     seq_tensor = torch.zeros((len(vectorized_seqs), seq_lengths.max())).long()
-    for idx, (seq, seqlen) in enumerate(zip(vectorized_seqs, seq_lengths)):
-        seq_tensor[idx, :seqlen] = torch.LongTensor(seq)
+    for idx, (seq, seq_len) in enumerate(zip(vectorized_seqs, seq_lengths)):
+        seq_tensor[idx, :seq_len] = torch.LongTensor(seq)
 
     # SORT YOUR TENSORS BY LENGTH!
     seq_lengths, perm_idx = seq_lengths.sort(0, descending=True)
@@ -58,6 +58,8 @@ def pad_sequences(vectorized_seqs, seq_lengths, countries):
     if len(countries):
         target = target[perm_idx]
 
+    # Return variables
+    # DataParellel requires everything Variable
     return cuda_variable(seq_tensor), \
         cuda_variable(seq_lengths), \
         cuda_variable(target)
@@ -67,8 +69,8 @@ def pad_sequences(vectorized_seqs, seq_lengths, countries):
 def make_variables(names, countries):
     sequence_and_length = [str2ascii_arr(name) for name in names]
     vectorized_seqs = [sl[0] for sl in sequence_and_length]
-    seq_lengths = [sl[1] for sl in sequence_and_length]
-    return pad_sequences(vectorized_seqs, torch.LongTensor(seq_lengths), countries)
+    seq_lengths = torch.LongTensor([sl[1] for sl in sequence_and_length])
+    return pad_sequences(vectorized_seqs, seq_lengths, countries)
 
 
 def str2ascii_arr(msg):
@@ -81,10 +83,9 @@ def countries2tensor(countries):
         country) for country in countries]
     return torch.LongTensor(country_ids)
 
-# Our model
-
 
 class RNNClassifier(nn.Module):
+    # Our model
 
     def __init__(self, input_size, hidden_size, output_size, n_layers=1):
         super(RNNClassifier, self).__init__()
@@ -131,7 +132,7 @@ class RNNClassifier(nn.Module):
 # Train cycle
 def train():
     total_loss = 0
-    train_dataset_size = len(train_loader.dataset)
+    dataset_size = len(train_loader.dataset)
 
     for i, (names, countries) in enumerate(train_loader, 1):
         input, seq_lengths, target = make_variables(names, countries)
@@ -147,7 +148,7 @@ def train():
         if i % 100 is 1:
             trained_size = i * BATCH_SIZE
             print('[%s (%d %d%%) %.4f]' %
-                  (time_since(start), epoch, trained_size * 100 / train_dataset_size,
+                  (time_since(start), epoch, trained_size * 100 / dataset_size,
                    total_loss / trained_size))
 
     return total_loss

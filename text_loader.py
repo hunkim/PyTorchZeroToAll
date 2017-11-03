@@ -8,7 +8,7 @@ from torch.utils.data import Dataset, DataLoader
 class TextDataset(Dataset):
     # Initialize your data, download, etc.
 
-    def __init__(self, filename="shakespeare.txt.gz"):
+    def __init__(self, filename="./data/shakespeare.txt.gz"):
         self.len = 0
         with gzip.open(filename, 'rt') as f:
             self.targetLines = [x.strip() for x in f if x.strip()]

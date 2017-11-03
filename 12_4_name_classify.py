@@ -15,12 +15,12 @@ N_LAYERS = 1
 BATCH_SIZE = 256
 N_EPOCHS = 20
 
-test_dataset = NameDataset(is_test_set=True)
+test_dataset = NameDataset(is_train_set=False)
 test_loader = DataLoader(dataset=test_dataset,
                          batch_size=BATCH_SIZE, shuffle=True)
 
 
-train_dataset = NameDataset(is_test_set=False)
+train_dataset = NameDataset(is_train_set=True)
 train_loader = DataLoader(dataset=train_dataset,
                           batch_size=BATCH_SIZE, shuffle=True)
 
@@ -132,7 +132,6 @@ class RNNClassifier(nn.Module):
 # Train cycle
 def train():
     total_loss = 0
-    dataset_size = len(train_loader.dataset)
 
     for i, (names, countries) in enumerate(train_loader, 1):
         input, seq_lengths, target = make_variables(names, countries)
@@ -145,11 +144,12 @@ def train():
         loss.backward()
         optimizer.step()
 
-        if i % 100 is 1:
-            trained_size = i * BATCH_SIZE
-            print('[%s (%d %d%%) %.4f]' %
-                  (time_since(start), epoch, trained_size * 100 / dataset_size,
-                   total_loss / trained_size))
+        if i % 10 == 0:
+            print('[{}] Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.2f}'.format(
+                time_since(start), epoch,  i *
+                len(names), len(train_loader.dataset),
+                100. * i * len(names) / len(train_loader.dataset),
+                total_loss / i * len(names)))
 
     return total_loss
 

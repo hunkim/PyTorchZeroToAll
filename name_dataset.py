@@ -13,8 +13,8 @@ class NameDataset(Dataset):
     """ Diabetes dataset."""
 
     # Initialize your data, download, etc.
-    def __init__(self, is_test_set=False):
-        filename = './data/names_train.csv.gz' if is_test_set else './data/names_test.csv.gz'
+    def __init__(self, is_train_set=False):
+        filename = './data/names_train.csv.gz' if is_train_set else './data/names_test.csv.gz'
         with gzip.open(filename, "rt") as f:
             reader = csv.reader(f)
             rows = list(reader)
@@ -42,7 +42,7 @@ class NameDataset(Dataset):
 
 # Test the loader
 if __name__ == "__main__":
-    dataset = NameDataset(True)
+    dataset = NameDataset(False)
     print(dataset.get_countries())
     print(dataset.get_country(3))
     print(dataset.get_country_id('Korean'))
@@ -51,7 +51,8 @@ if __name__ == "__main__":
                               batch_size=10,
                               shuffle=True)
 
+    print(len(train_loader.dataset))
     for epoch in range(2):
-        for names, countries in train_loader:
+        for i, (names, countries) in enumerate(train_loader):
             # Run your training process
-            print(epoch, "names", names, "countries", countries)
+            print(epoch, i, "names", names, "countries", countries)

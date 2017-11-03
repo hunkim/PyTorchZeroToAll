@@ -1,4 +1,4 @@
-# https://github.com/spro/practical-pytorch
+# Original code is from https://github.com/spro/practical-pytorch
 import time
 import math
 import torch
@@ -9,6 +9,7 @@ from torch.utils.data import DataLoader
 from name_dataset import NameDataset
 from torch.nn.utils.rnn import pack_padded_sequence, pad_packed_sequence
 
+# Parameters and DataLoaders
 HIDDEN_SIZE = 100
 N_LAYERS = 1
 BATCH_SIZE = 256
@@ -16,19 +17,18 @@ N_EPOCHS = 20
 
 test_dataset = NameDataset(is_test_set=True)
 test_loader = DataLoader(dataset=test_dataset,
-                         batch_size=BATCH_SIZE,
-                         shuffle=True)
+                         batch_size=BATCH_SIZE, shuffle=True)
 
 
 train_dataset = NameDataset(is_test_set=False)
 train_loader = DataLoader(dataset=train_dataset,
-                          batch_size=BATCH_SIZE,
-                          shuffle=True)
+                          batch_size=BATCH_SIZE, shuffle=True)
 
-n_countries = len(train_dataset.get_countries())
+N_COUNTRIES = len(train_dataset.get_countries())
 N_CHARS = 128  # ASCII
 
 
+# Some utility functions
 def time_since(since):
     s = time.time() - since
     m = math.floor(s / 60)
@@ -81,6 +81,8 @@ def countries2tensor(countries):
         country) for country in countries]
     return torch.LongTensor(country_ids)
 
+# Our model
+
 
 class RNNClassifier(nn.Module):
 
@@ -109,12 +111,15 @@ class RNNClassifier(nn.Module):
         embedded = self.embedding(input)
 
         # Pack them up nicely
-        gru_input = pack_padded_sequence(embedded, seq_lengths.data.cpu().numpy())
+        gru_input = pack_padded_sequence(
+            embedded, seq_lengths.data.cpu().numpy())
 
         # To compact weights again call flatten_parameters().
         self.gru.flatten_parameters()
         output, hidden = self.gru(gru_input, hidden)
-        # Use the last layer output
+
+        # Use the last layer output as FC's input
+        # No need to unpack, since we are going to use hidden
         fc_output = self.fc(hidden[-1])
         return fc_output
 
@@ -123,10 +128,7 @@ class RNNClassifier(nn.Module):
         return cuda_variable(hidden)
 
 
-# Train for a given src and target
-# It feeds single string to demonstrate seq2seq
-# It's extremely slow, and we need to use (1) batch and (2) data parallelism
-# http://pytorch.org/tutorials/beginner/former_torchies/parallelism_tutorial.html.
+# Train cycle
 def train():
     total_loss = 0
     train_dataset_size = len(train_loader.dataset)
@@ -178,10 +180,11 @@ def test(name=None):
 
 if __name__ == '__main__':
 
-    classifier = RNNClassifier(N_CHARS, HIDDEN_SIZE, n_countries, N_LAYERS)
+    classifier = RNNClassifier(N_CHARS, HIDDEN_SIZE, N_COUNTRIES, N_LAYERS)
     if torch.cuda.device_count() > 1:
         print("Let's use", torch.cuda.device_count(), "GPUs!")
-        # Default dim = 0 [33, xxx] -> [11, ...], [11, ...], [11, ...] on 3 GPUs
+        # Default dim = 0 [33, xxx] -> [11, ...], [11, ...], [11, ...] on 3
+        # GPUs
         classifier = nn.DataParallel(classifier)
 
     if torch.cuda.is_available():
@@ -201,5 +204,3 @@ if __name__ == '__main__':
         test("Sung")
         test("Jungwoo")
         test("Nako")
-
-

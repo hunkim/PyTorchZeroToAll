@@ -5,6 +5,7 @@
 *.pt
 X*
 ppts
+.ipynb_checkpoints
 client_secret.json
 __pycache__/
 tmp

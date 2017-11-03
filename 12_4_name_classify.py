@@ -203,4 +203,5 @@ if __name__ == '__main__':
         test()
         test("Sung")
         test("Jungwoo")
+        test("Soojin")
         test("Nako")

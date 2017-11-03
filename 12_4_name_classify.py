@@ -11,9 +11,9 @@ from torch.nn.utils.rnn import pack_padded_sequence, pad_packed_sequence
 
 # Parameters and DataLoaders
 HIDDEN_SIZE = 100
-N_LAYERS = 1
+N_LAYERS = 2
 BATCH_SIZE = 256
-N_EPOCHS = 20
+N_EPOCHS = 100
 
 test_dataset = NameDataset(is_train_set=False)
 test_loader = DataLoader(dataset=test_dataset,
@@ -36,7 +36,7 @@ def time_since(since):
     return '%dm %ds' % (m, s)
 
 
-def cuda_variable(tensor):
+def create_variable(tensor):
     # Do cuda() before wrapping with variable
     if torch.cuda.is_available():
         return Variable(tensor.cuda())
@@ -50,22 +50,23 @@ def pad_sequences(vectorized_seqs, seq_lengths, countries):
     for idx, (seq, seq_len) in enumerate(zip(vectorized_seqs, seq_lengths)):
         seq_tensor[idx, :seq_len] = torch.LongTensor(seq)
 
-    # SORT YOUR TENSORS BY LENGTH!
+    # Sort tensors by their length
     seq_lengths, perm_idx = seq_lengths.sort(0, descending=True)
     seq_tensor = seq_tensor[perm_idx]
 
+    # Also sort the target (countries) in the same order
     target = countries2tensor(countries)
     if len(countries):
         target = target[perm_idx]
 
     # Return variables
-    # DataParellel requires everything Variable
-    return cuda_variable(seq_tensor), \
-        cuda_variable(seq_lengths), \
-        cuda_variable(target)
+    # DataParallel requires everything to be a Variable
+    return create_variable(seq_tensor), \
+        create_variable(seq_lengths), \
+        create_variable(target)
 
 
-# vectorized_seqs, seq_lengths
+# Create necessary variables, lengths, and target
 def make_variables(names, countries):
     sequence_and_length = [str2ascii_arr(name) for name in names]
     vectorized_seqs = [sl[0] for sl in sequence_and_length]
@@ -87,15 +88,17 @@ def countries2tensor(countries):
 class RNNClassifier(nn.Module):
     # Our model
 
-    def __init__(self, input_size, hidden_size, output_size, n_layers=1):
+    def __init__(self, input_size, hidden_size, output_size, n_layers=1, bidirectional=True):
         super(RNNClassifier, self).__init__()
         self.input_size = input_size
         self.hidden_size = hidden_size
         self.output_size = output_size
         self.n_layers = n_layers
+        self.n_directions = int(bidirectional) + 1
 
         self.embedding = nn.Embedding(input_size, hidden_size)
-        self.gru = nn.GRU(hidden_size, hidden_size, n_layers)
+        self.gru = nn.GRU(hidden_size, hidden_size, n_layers,
+                          bidirectional=bidirectional)
         self.fc = nn.Linear(hidden_size, output_size)
 
     def forward(self, input, seq_lengths):
@@ -125,8 +128,9 @@ class RNNClassifier(nn.Module):
         return fc_output
 
     def _init_hidden(self, batch_size):
-        hidden = torch.zeros(self.n_layers, batch_size, self.hidden_size)
-        return cuda_variable(hidden)
+        hidden = torch.zeros(self.n_layers * self.n_directions,
+                             batch_size, self.hidden_size)
+        return create_variable(hidden)
 
 
 # Train cycle
@@ -184,8 +188,7 @@ if __name__ == '__main__':
     classifier = RNNClassifier(N_CHARS, HIDDEN_SIZE, N_COUNTRIES, N_LAYERS)
     if torch.cuda.device_count() > 1:
         print("Let's use", torch.cuda.device_count(), "GPUs!")
-        # Default dim = 0 [33, xxx] -> [11, ...], [11, ...], [11, ...] on 3
-        # GPUs
+        # dim = 0 [33, xxx] -> [11, ...], [11, ...], [11, ...] on 3 GPUs
         classifier = nn.DataParallel(classifier)
 
     if torch.cuda.is_available():
@@ -202,6 +205,8 @@ if __name__ == '__main__':
 
         # Testing
         test()
+
+        # Testing several samples
         test("Sung")
         test("Jungwoo")
         test("Soojin")

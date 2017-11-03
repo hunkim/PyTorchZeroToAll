@@ -10,7 +10,7 @@ from seq2seq_models import cuda_variable, str2tensor, EOS_token, SOS_token
 
 
 N_LAYERS = 1
-BATCH_SIZE = 32
+BATCH_SIZE = 1
 N_EPOCH = 100
 N_CHARS = 128  # ASCII
 HIDDEN_SIZE = N_CHARS
@@ -129,10 +129,10 @@ print("Training for %d epochs..." % N_EPOCH)
 for epoch in range(1, N_EPOCH + 1):
     # Get srcs and targets from data loader
     for i, (srcs, targets) in enumerate(train_loader):
-        for src, target in zip(srcs, targets):
-            train_loss = train(src, target)
+        train_loss = train(srcs[0], targets[0])
 
-        print('[(%d %d%%) %.4f]' %
-              (epoch, epoch / N_EPOCH * 100, train_loss))
-        print(translate(srcs[0]), '\n')
-        print(translate(), '\n')
+        if i % 100 is 0:
+            print('[(%d %d%%) %.4f]' %
+                  (epoch, epoch / N_EPOCH * 100, train_loss))
+            print(translate(srcs[0]), '\n')
+            print(translate(), '\n')

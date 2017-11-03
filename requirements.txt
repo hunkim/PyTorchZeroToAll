@@ -6,4 +6,3 @@ numpy==1.13.3
 torch
 torchvision==0.1.9
 Unidecode==0.04.21
-google_api_python_client==1.6.4

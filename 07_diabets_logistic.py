@@ -3,7 +3,7 @@ import torch
 from torch.autograd import Variable
 import numpy as np
 
-xy = np.loadtxt('data-diabetes.csv', delimiter=',', dtype=np.float32)
+xy = np.loadtxt('./data/diabetes.csv.gz', delimiter=',', dtype=np.float32)
 x_data = Variable(torch.from_numpy(xy[:, 0:-1]))
 y_data = Variable(torch.from_numpy(xy[:, [-1]]))
 

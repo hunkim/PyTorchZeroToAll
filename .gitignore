@@ -4,7 +4,6 @@
 .nsml*
 *.pt
 X*
-data
 ppts
 client_secret.json
 __pycache__/

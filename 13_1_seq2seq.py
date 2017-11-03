@@ -8,7 +8,7 @@ from seq2seq_models import str2tensor, EOS_token, SOS_token
 
 HIDDEN_SIZE = 100
 N_LAYERS = 1
-BATCH_SIZE = 32
+BATCH_SIZE = 1
 N_EPOCH = 100
 N_CHARS = 128  # ASCII
 
@@ -30,7 +30,7 @@ def test():
 
 
 # Train for a given src and target
-# To demonstrate seq2seq, We don't handle batch in thei code,
+# To demonstrate seq2seq, We don't handle batch in the code,
 # and our encoder runs this one step at a time
 # It's extremely slow, and please do not use in practice.
 # We need to use (1) batch and (2) data parallelism
@@ -112,10 +112,10 @@ print("Training for %d epochs..." % N_EPOCH)
 for epoch in range(1, N_EPOCH + 1):
     # Get srcs and targets from data loader
     for i, (srcs, targets) in enumerate(train_loader):
-        for src, target in zip(srcs, targets):
-            train_loss = train(src, target)
+        train_loss = train(srcs[0], targets[0])  # Batch is 1
 
-        print('[(%d %d%%) %.4f]' %
-              (epoch, epoch / N_EPOCH * 100, train_loss))
-        print(translate(srcs[0]), '\n')
-        print(translate(), '\n')
+        if i % 100 is 0:
+            print('[(%d %d%%) %.4f]' %
+                  (epoch, epoch / N_EPOCH * 100, train_loss))
+            print(translate(srcs[0]), '\n')
+            print(translate(), '\n')

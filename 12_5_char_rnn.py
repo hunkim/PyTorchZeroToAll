@@ -11,10 +11,10 @@ from text_loader import TextDataset
 
 hidden_size = 100
 n_layers = 3
-batch_size = 32
+batch_size = 1
 n_epochs = 100
 filename = 'shakespeare.txt'
-n_characters = 128  # Ascii
+n_characters = 128  # ASCII
 
 
 class RNN(nn.Module):
@@ -28,12 +28,16 @@ class RNN(nn.Module):
 
         self.embedding = nn.Embedding(input_size, hidden_size)
         self.gru = nn.GRU(hidden_size, hidden_size, n_layers)
-        self.decoder = nn.Linear(hidden_size, output_size)
+        self.linear = nn.Linear(hidden_size, output_size)
 
+    # This runs this one step at a time
+    # It's extremely slow, and please do not use in practice.
+    # We need to use (1) batch and (2) data parallelism
     def forward(self, input, hidden):
-        input = self.embedding(input.view(1, -1))
-        output, hidden = self.gru(input.view(1, 1, -1), hidden)
-        output = self.decoder(output.view(1, -1))
+        embed = self.embedding(input.view(1, -1))  # S(=1) x I
+        embed = embed.view(1, 1, -1)  # S(=1) x B(=1) x I (embedding size)
+        output, hidden = self.gru(embed, hidden)
+        output = self.linear(output.view(1, -1))  # S(=1) x I
         return output, hidden
 
     def init_hidden(self):
@@ -127,11 +131,12 @@ try:
     print("Training for %d epochs..." % n_epochs)
     for epoch in range(1, n_epochs + 1):
         for i, (lines, _) in enumerate(train_loader):
-            for line in lines:
-                loss = train(line)
+            loss = train(lines[0])  # Batch size is 1
 
-            print('[(%d %d%%) %.4f]' % (epoch, epoch / n_epochs * 100, loss))
-            print(generate(decoder, 'Wh', 100), '\n')
+            if i % 100 == 0:
+                print('[(%d %d%%) %.4f]' %
+                      (epoch, epoch / n_epochs * 100, loss))
+                print(generate(decoder, 'Wh', 100), '\n')
 
     print("Saving...")
     save()

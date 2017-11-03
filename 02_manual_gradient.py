@@ -29,7 +29,7 @@ for epoch in range(10):
         grad = gradient(x_val, y_val)
         w = w - 0.01 * grad
         print("\tgrad: ", x_val, y_val, round(grad, 2))
-        l = loss(x_val, y_val)
+    l = loss(x_val, y_val)
 
     print("progress:", epoch, "w=", round(w, 2), "loss=", round(l, 2))
 

@@ -37,16 +37,18 @@ class Model(nn.Module):
         super(Model, self).__init__()
         self.rnn = nn.RNN(input_size=input_size,
                           hidden_size=hidden_size, batch_first=True)
+        self.fc = nn.Linear(input_size, num_classes)
 
     def forward(self, hidden, x):
-        # Reshape input (batch first)
+        # Reshape input in (batch_size, sequence_length, input_size)
         x = x.view(batch_size, sequence_length, input_size)
 
         # Propagate input through RNN
         # Input: (batch, seq_len, input_size)
         # hidden: (batch, num_layers * num_directions, hidden_size)
         out, hidden = self.rnn(x, hidden)
-        return hidden, out.view(-1, num_classes)
+        out = self.fc(out.view(-1, num_classes))
+        return hidden, out
 
     def init_hidden(self):
         # Initialize hidden and cell states
@@ -68,13 +70,15 @@ for epoch in range(100):
     optimizer.zero_grad()
     loss = 0
     hidden = model.init_hidden()
-
+    input = Variable(torch.Tensor(one_hot_lookup[0]))
     sys.stdout.write("predicted string: ")
-    for input, label in zip(inputs, labels):
+    for label in labels:
         # print(input.size(), label.size())
         hidden, output = model(hidden, input)
-        val, idx = output.max(1)
-        sys.stdout.write(idx2char[idx.data[0]])
+        val, var_idx = output.max(1)
+        idx = var_idx.data[0]
+        input = Variable(torch.Tensor(one_hot_lookup[idx]))
+        sys.stdout.write(idx2char[idx])
         loss += criterion(output, label)
 
     print(", epoch: %d, loss: %1.3f" % (epoch + 1, loss.data[0]))

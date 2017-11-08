@@ -134,7 +134,7 @@ try:
             loss = train(lines[0])  # Batch size is 1
 
             if i % 100 == 0:
-                print('[(%d %d%%) %.4f]' %
+                print('[(%d %d%%) loss: %.4f]' %
                       (epoch, epoch / n_epochs * 100, loss))
                 print(generate(decoder, 'Wh', 100), '\n')
 

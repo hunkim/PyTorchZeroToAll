@@ -31,6 +31,7 @@ class Model(nn.Module):
         super(Model, self).__init__()
         self.embedding = nn.Embedding(input_size, embedding_size)
         self.rnn = nn.RNN(input_size=embedding_size, hidden_size=5, batch_first=True)
+        self.fc = nn.Linear(hidden_size, num_classes)
 
     def forward(self, x):
         # Initialize hidden and cell states
@@ -45,7 +46,7 @@ class Model(nn.Module):
         # Input: (batch, seq_len, embedding_size)
         # h_0: (batch, num_layers * num_directions, hidden_size)
         out, _ = self.rnn(emb, h_0)
-        return out.view(-1, num_classes)
+        return self.fc(out.view(-1, num_classes))
 
 
 # Instantiate RNN model
@@ -58,7 +59,7 @@ criterion = torch.nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=0.1)
 
 # Train the model
-for epoch in range(500):
+for epoch in range(100):
     outputs = model(inputs)
     optimizer.zero_grad()
     loss = criterion(outputs, labels)

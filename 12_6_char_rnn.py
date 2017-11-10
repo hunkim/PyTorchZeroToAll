@@ -1,7 +1,4 @@
 # https://github.com/spro/practical-pytorch
-import time
-import os
-
 import torch
 import torch.nn as nn
 from torch.autograd import Variable
@@ -13,7 +10,6 @@ hidden_size = 100
 n_layers = 3
 batch_size = 1
 n_epochs = 100
-filename = 'shakespeare.txt'
 n_characters = 128  # ASCII
 
 
@@ -108,26 +104,19 @@ def train(line):
     return loss.data[0] / len(input)
 
 
-def save():
-    save_filename = os.path.splitext(os.path.basename(filename))[0] + '.pt'
-    torch.save(decoder, save_filename)
-    print('Saved as %s' % save_filename)
+if __name__ == '__main__':
 
+    decoder = RNN(n_characters, hidden_size, n_characters, n_layers)
+    if torch.cuda.is_available():
+        decoder.cuda()
 
-decoder = RNN(n_characters, hidden_size, n_characters, n_layers)
-if torch.cuda.is_available():
-    decoder.cuda()
+    decoder_optimizer = torch.optim.Adam(decoder.parameters(), lr=0.001)
+    criterion = nn.CrossEntropyLoss()
 
-decoder_optimizer = torch.optim.Adam(decoder.parameters(), lr=0.001)
-criterion = nn.CrossEntropyLoss()
+    train_loader = DataLoader(dataset=TextDataset(),
+                              batch_size=batch_size,
+                              shuffle=True)
 
-
-train_loader = DataLoader(dataset=TextDataset(),
-                          batch_size=batch_size,
-                          shuffle=True)
-
-
-try:
     print("Training for %d epochs..." % n_epochs)
     for epoch in range(1, n_epochs + 1):
         for i, (lines, _) in enumerate(train_loader):
@@ -138,9 +127,4 @@ try:
                       (epoch, epoch / n_epochs * 100, loss))
                 print(generate(decoder, 'Wh', 100), '\n')
 
-    print("Saving...")
-    save()
 
-except KeyboardInterrupt:
-    print("Saving before quit...")
-    save()

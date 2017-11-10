@@ -248,9 +248,8 @@ for data in rand_loader:
 # 
 # DataParallel splits your data automatically and sends job orders to multiple
 # models on several GPUs. After each model finishes their job, DataParallel
-# collects and merges the results before returning it to you.
+# collects and merges the results before returning it to you. It's really awesome!
 # 
 # For more information, please check out
-# http://pytorch.org/tutorials/beginner/former\_torchies/parallelism\_tutorial.html
-# and slides at http://bit.ly/PyTorchZeroAll.
+# http://pytorch.org/tutorials/beginner/former\_torchies/parallelism\_tutorial.html.
 # 

@@ -21,7 +21,10 @@ Then, you can copy all your tensors to the GPU:
 Please note that just calling ``mytensor.gpu()`` won't copy the tensor
 to the GPU. You need to assign it to a new tensor and use that tensor on the GPU.
 
-It's natural to execute your forward, backward propagations on multiple GPUs. However, Pytorch will only use one GPU by default. You can easily run your operations on multiple GPUs by making your model run parallelly using ``DataParallel``:
+It's natural to execute your forward, backward propagations on multiple GPUs. 
+However, Pytorch will only use one GPU by default. You can easily run your 
+operations on multiple GPUs by making your model run parallelly using 
+``DataParallel``:
 
 .. code:: python
 

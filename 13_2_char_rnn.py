@@ -45,8 +45,8 @@ class RNN(nn.Module):
         return Variable(hidden)
 
 
-def str2tensor(str):
-    tensor = [ord(c) for c in str]
+def str2tensor(string):
+    tensor = [ord(c) for c in string]
     tensor = torch.LongTensor(tensor)
 
     if torch.cuda.is_available():
@@ -86,23 +86,41 @@ def generate(decoder, prime_str='A', predict_len=100, temperature=0.8):
 # http://pytorch.org/tutorials/beginner/former_torchies/parallelism_tutorial.html.
 
 
-def train(line):
+def train_teacher_forching(line):
     input = str2tensor(line[:-1])
     target = str2tensor(line[1:])
 
     hidden = decoder.init_hidden()
-    decoder.zero_grad()
     loss = 0
 
     for c in range(len(input)):
         output, hidden = decoder(input[c], hidden)
         loss += criterion(output, target[c])
 
+    decoder.zero_grad()
     loss.backward()
     decoder_optimizer.step()
 
     return loss.data[0] / len(input)
 
+def train(line):
+    input = str2tensor(line[:-1])
+    target = str2tensor(line[1:])
+
+    hidden = decoder.init_hidden()
+    decoder_in = input[0]
+    loss = 0
+
+    for c in range(len(input)):
+        output, hidden = decoder(decoder_in, hidden)
+        loss += criterion(output, target[c])
+        decoder_in = output.max(1)[1]
+
+    decoder.zero_grad()
+    loss.backward()
+    decoder_optimizer.step()
+
+    return loss.data[0] / len(input)
 
 if __name__ == '__main__':
 

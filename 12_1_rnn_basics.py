@@ -17,20 +17,19 @@ hidden = (Variable(torch.randn(1, 1, 2)))
 
 # Propagate input through RNN
 # Input: (batch, seq_len, input_size) when batch_first=True
-inputs = Variable(torch.Tensor([[h, e, l, l, o]]))
-print("input size", inputs.size())
-
-for one in inputs[0]:
+inputs = Variable(torch.Tensor([h, e, l, l, o]))
+for one in inputs:
     one = one.view(1, 1, -1)
     # Input: (batch, seq_len, input_size) when batch_first=True
     out, hidden = cell(one, hidden)
-    print(out.size())
+    print("one input size", one.size(), "out size", out.size())
 
 # We can do the whole at once
 # Propagate input through RNN
 # Input: (batch, seq_len, input_size) when batch_first=True
+inputs = inputs.view(1, 5, -1)
 out, hidden = cell(inputs, hidden)
-print("out size", out.size())
+print("sequence input size", inputs.size(), "out size", out.size())
 
 
 # One cell RNN input_dim (4) -> output_dim (2). sequence: 5, batch 3
@@ -39,10 +38,21 @@ print("out size", out.size())
 inputs = Variable(torch.Tensor([[h, e, l, l, o],
                                 [e, o, l, l, l],
                                 [l, l, e, e, l]]))
-print("input size", inputs.size())  # input size torch.Size([3, 5, 4])
 
 # Propagate input through RNN
 # Input: (batch, seq_len, input_size) when batch_first=True
 # B x S x I
 out, hidden = cell(inputs, hidden)
-print("out size", out.size())  # out size torch.Size([3, 5, 2])
+print("batch input size", inputs.size(), "out size", out.size())
+
+
+# One cell RNN input_dim (4) -> output_dim (2)
+cell = nn.RNN(input_size=4, hidden_size=2)
+
+# The given dimensions dim0 and dim1 are swapped.
+inputs = inputs.transpose(3, dim1=1, dim2=2)
+# Propagate input through RNN
+# Input: (seq_len, batch_size, input_size) when batch_first=False (default)
+# S x B x I
+out, hidden = cell(inputs, hidden)
+print("batch input size", inputs.size(), "out size", out.size())

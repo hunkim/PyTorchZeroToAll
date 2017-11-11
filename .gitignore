@@ -4,6 +4,7 @@
 .nsml*
 *.pt
 X*
+mnist_data
 ppts
 .ipynb_checkpoints
 client_secret.json

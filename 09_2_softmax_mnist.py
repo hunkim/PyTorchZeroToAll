@@ -11,12 +11,12 @@ from torch.autograd import Variable
 batch_size = 64
 
 # MNIST Dataset
-train_dataset = datasets.MNIST(root='./data/',
+train_dataset = datasets.MNIST(root='./minst_data/',
                                train=True,
                                transform=transforms.ToTensor(),
                                download=True)
 
-test_dataset = datasets.MNIST(root='./data/',
+test_dataset = datasets.MNIST(root='./mnist_data/',
                               train=False,
                               transform=transforms.ToTensor())
 
@@ -78,7 +78,7 @@ def test():
         data, target = Variable(data, volatile=True), Variable(target)
         output = model(data)
         # sum up batch loss
-        test_loss += criterion(output, target, size_average=False).data[0]
+        test_loss += criterion(output, target).data[0]
         # get the index of the max
         pred = output.data.max(1, keepdim=True)[1]
         correct += pred.eq(target.data.view_as(pred)).cpu().sum()

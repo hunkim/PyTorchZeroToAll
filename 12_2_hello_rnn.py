@@ -60,7 +60,7 @@ print(model)
 
 # Set loss and optimizer function
 # CrossEntropyLoss = LogSoftmax + NLLLoss
-criterion = torch.nn.CrossEntropyLoss()
+criterion = nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=0.1)
 
 # Train the model

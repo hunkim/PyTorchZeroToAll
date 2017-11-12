@@ -103,6 +103,7 @@ def train_teacher_forching(line):
 
     return loss.data[0] / len(input)
 
+
 def train(line):
     input = str2tensor(line[:-1])
     target = str2tensor(line[1:])
@@ -144,5 +145,3 @@ if __name__ == '__main__':
                 print('[(%d %d%%) loss: %.4f]' %
                       (epoch, epoch / n_epochs * 100, loss))
                 print(generate(decoder, 'Wh', 100), '\n')
-
-

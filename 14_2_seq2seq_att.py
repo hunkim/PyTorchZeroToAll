@@ -120,7 +120,6 @@ if __name__ == '__main__':
     optimizer = torch.optim.Adam(params, lr=0.001)
     criterion = nn.CrossEntropyLoss()
 
-
     train_loader = DataLoader(dataset=TextDataset(),
                               batch_size=BATCH_SIZE,
                               shuffle=True,

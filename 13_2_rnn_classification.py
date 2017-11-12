@@ -25,6 +25,7 @@ train_loader = DataLoader(dataset=train_dataset,
                           batch_size=BATCH_SIZE, shuffle=True)
 
 N_COUNTRIES = len(train_dataset.get_countries())
+print(N_COUNTRIES, "countries")
 N_CHARS = 128  # ASCII
 
 
@@ -90,9 +91,7 @@ class RNNClassifier(nn.Module):
 
     def __init__(self, input_size, hidden_size, output_size, n_layers=1, bidirectional=True):
         super(RNNClassifier, self).__init__()
-        self.input_size = input_size
         self.hidden_size = hidden_size
-        self.output_size = output_size
         self.n_layers = n_layers
         self.n_directions = int(bidirectional) + 1
 

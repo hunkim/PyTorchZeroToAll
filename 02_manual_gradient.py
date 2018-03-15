@@ -1,6 +1,7 @@
 """Autogradient Example."""
 import matplotlib.pyplot as plt
 
+
 x_data = [1.0, 2.0, 3.0]
 y_data = [2.0, 4.0, 6.0]
 
@@ -39,11 +40,12 @@ for epoch in range(num_epoches):
         grad = gradient(x_val, y_val)
         w = w - lr * grad
         print("\tgrad: ", x_val, y_val, round(grad, 2))
-        los_val = loss(x_val, y_val)
+        loss_val = loss(x_val, y_val)
+        # log values
         w_history.append(w)
-        loss_history.append(los_val)
+        loss_history.append(loss_val)
 
-    print("progress:", epoch, "w=", round(w, 2), "loss=", round(los_val, 2))
+    print("progress:", epoch, "w=", round(w, 2), "loss=", round(loss_val, 2))
 
 # After training
 print("predict (after training)", "4 hours", forward(4))

@@ -36,16 +36,16 @@ class Model(nn.Module):
 
     def forward(self, x):
         # Initialize hidden and cell states
-        # (batch, num_layers * num_directions, hidden_size) for batch_first=True
+        # (num_layers * num_directions, batch, hidden_size)
         h_0 = Variable(torch.zeros(
-            x.size(0), num_layers, hidden_size))
+            self.num_layers, x.size(0), self.hidden_size))
 
         emb = self.embedding(x)
         emb = emb.view(batch_size, sequence_length, -1)
 
         # Propagate embedding through RNN
         # Input: (batch, seq_len, embedding_size)
-        # h_0: (batch, num_layers * num_directions, hidden_size)
+        # h_0: (num_layers * num_directions, batch, hidden_size)
         out, _ = self.rnn(emb, h_0)
         return self.fc(out.view(-1, num_classes))
 

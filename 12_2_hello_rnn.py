@@ -44,14 +44,14 @@ class Model(nn.Module):
 
         # Propagate input through RNN
         # Input: (batch, seq_len, input_size)
-        # hidden: (batch, num_layers * num_directions, hidden_size)
+        # hidden: (num_layers * num_directions, batch, hidden_size)
         out, hidden = self.rnn(x, hidden)
         return hidden, out.view(-1, num_classes)
 
     def init_hidden(self):
         # Initialize hidden and cell states
-        # (batch, num_layers * num_directions, hidden_size) for batch_first=True
-        return Variable(torch.zeros(batch_size, num_layers, hidden_size))
+        # (num_layers * num_directions, batch, hidden_size)
+        return Variable(torch.zeros(num_layers, batch_size, hidden_size))
 
 
 # Instantiate RNN model

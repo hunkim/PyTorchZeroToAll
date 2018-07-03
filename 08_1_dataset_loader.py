@@ -29,7 +29,7 @@ dataset = DiabetesDataset()
 train_loader = DataLoader(dataset=dataset,
                           batch_size=32,
                           shuffle=True,
-                          num_workers=2)
+                          num_workers=2) #num_workers=0 in cpu version
 
 for epoch in range(2):
     for i, data in enumerate(train_loader, 0):

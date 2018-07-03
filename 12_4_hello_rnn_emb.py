@@ -27,12 +27,19 @@ num_layers = 1  # one-layer rnn
 
 class Model(nn.Module):
 
-    def __init__(self):
+    def __init__(self, num_classes, input_size, hidden_size, num_layers, embedding_size):
         super(Model, self).__init__()
-        self.embedding = nn.Embedding(input_size, embedding_size)
-        self.rnn = nn.RNN(input_size=embedding_size,
+
+        self.num_classes = num_classes
+        self.num_layers = num_layers
+        self.input_size = input_size
+        self.hidden_size = hidden_size
+        self.embedding_size = embedding_size
+
+        self.embedding = nn.Embedding(self.input_size, self.embedding_size)
+        self.rnn = nn.RNN(input_size=self.embedding_size,
                           hidden_size=5, batch_first=True)
-        self.fc = nn.Linear(hidden_size, num_classes)
+        self.fc = nn.Linear(self.hidden_size, self.num_classes)
 
     def forward(self, x):
         # Initialize hidden and cell states
@@ -51,7 +58,7 @@ class Model(nn.Module):
 
 
 # Instantiate RNN model
-model = Model()
+model = Model(num_classes, input_size, hidden_size, num_layers, embedding_size)
 print(model)
 
 # Set loss and optimizer function

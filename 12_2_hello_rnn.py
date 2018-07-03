@@ -72,6 +72,7 @@ for epoch in range(100):
     sys.stdout.write("predicted string: ")
     for input, label in zip(inputs, labels):
         # print(input.size(), label.size())
+        label = label.unsqueeze(0)
         hidden, output = model(hidden, input)
         val, idx = output.max(1)
         sys.stdout.write(idx2char[idx.data[0]])

@@ -67,7 +67,7 @@ def train(epoch):
         if batch_idx % 10 == 0:
             print('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
                 epoch, batch_idx * len(data), len(train_loader.dataset),
-                100. * batch_idx / len(train_loader), loss.data[0]))
+                100. * batch_idx / len(train_loader), loss.item()))
 
 
 def test():
@@ -76,10 +76,10 @@ def test():
     correct = 0
     for data, target in test_loader:
         with torch.no_grad():
-            data, target = Variable(data, volatile=True), Variable(target)
+            data, target = Variable(data), Variable(target)
         output = model(data)
         # sum up batch loss
-        test_loss += criterion(output, target).data[0]
+        test_loss += criterion(output, target).item()
         # get the index of the max
         pred = output.data.max(1, keepdim=True)[1]
         correct += pred.eq(target.data.view_as(pred)).cpu().sum()

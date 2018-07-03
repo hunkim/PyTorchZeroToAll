@@ -12,7 +12,7 @@ class DiabetesDataset(Dataset):
 
     # Initialize your data, download, etc.
     def __init__(self):
-        xy = np.loadtxt('./data/diabetes.csv.gz',
+        xy = np.loadtxt('./data/diabetes.csv',
                         delimiter=',', dtype=np.float32)
         self.len = xy.shape[0]
         self.x_data = torch.from_numpy(xy[:, 0:-1])
@@ -29,7 +29,7 @@ dataset = DiabetesDataset()
 train_loader = DataLoader(dataset=dataset,
                           batch_size=32,
                           shuffle=True,
-                          num_workers=2)
+                          num_workers=2) #num_workers=0 in cpu version
 
 
 class Model(torch.nn.Module):

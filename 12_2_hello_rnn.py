@@ -75,7 +75,7 @@ for epoch in range(100):
         hidden, output = model(hidden, input)
         val, idx = output.max(1)
         sys.stdout.write(idx2char[idx.data[0]])
-        loss += criterion(output, label)
+        loss += criterion(output, label.view(1))
 
     print(", epoch: %d, loss: %1.3f" % (epoch + 1, loss.data[0]))
 

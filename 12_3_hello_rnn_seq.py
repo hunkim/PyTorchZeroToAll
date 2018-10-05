@@ -46,16 +46,16 @@ class RNN(nn.Module):
 
     def forward(self, x):
         # Initialize hidden and cell states
-        # (batch, num_layers * num_directions, hidden_size) for batch_first=True
+        # (num_layers * num_directions, batch, hidden_size) for batch_first=True
         h_0 = Variable(torch.zeros(
-            x.size(0), self.num_layers, self.hidden_size))
+            self.num_layers, x.size(0), self.hidden_size))
 
         # Reshape input
         x.view(x.size(0), self.sequence_length, self.input_size)
 
         # Propagate input through RNN
         # Input: (batch, seq_len, input_size)
-        # h_0: (batch, num_layers * num_directions, hidden_size)
+        # h_0: (num_layers * num_directions, batch, hidden_size)
 
         out, _ = self.rnn(x, h_0)
         return out.view(-1, num_classes)

@@ -41,7 +41,7 @@ class Model(torch.nn.Module):
         super(Model, self).__init__()
         self.l1 = torch.nn.Linear(8, 6)
         self.l2 = torch.nn.Linear(6, 4)
-        self.l3 = torch.nn.Linear(4, 1)
+        self.l3 = torch.nn.Linear(4, 2)
 
         self.sigmoid = torch.nn.Sigmoid()
 

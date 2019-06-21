@@ -51,7 +51,9 @@ class RNN(nn.Module):
             self.num_layers, x.size(0), self.hidden_size))
 
         # Reshape input
+        #print("x.shpae=", x.shape)
         x.view(x.size(0), self.sequence_length, self.input_size)
+        #print("x.view.shpae=", x.shape)
 
         # Propagate input through RNN
         # Input: (batch, seq_len, input_size)
@@ -74,13 +76,14 @@ optimizer = torch.optim.Adam(rnn.parameters(), lr=0.1)
 for epoch in range(100):
     outputs = rnn(inputs)
     optimizer.zero_grad()
+    #print("outputs= ",outputs, "labels =", labels)
     loss = criterion(outputs, labels)
     loss.backward()
     optimizer.step()
     _, idx = outputs.max(1)
     idx = idx.data.numpy()
     result_str = [idx2char[c] for c in idx.squeeze()]
-    print("epoch: %d, loss: %1.3f" % (epoch + 1, loss.data[0]))
+    print("epoch: %d, loss: %1.3f" % (epoch + 1, loss.data))
     print("Predicted string: ", ''.join(result_str))
 
 print("Learning finished!")

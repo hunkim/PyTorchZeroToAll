@@ -1,9 +1,7 @@
-
 import torch
-from torch.autograd import Variable
 
-x_data = Variable(torch.Tensor([[1.0], [2.0], [3.0]]))
-y_data = Variable(torch.Tensor([[2.0], [4.0], [6.0]]))
+x_data = torch.tensor([[1.0], [2.0], [3.0]], requires_grad = True)
+y_data = torch.tensor([[2.0], [4.0], [6.0]], requires_grad = True)
 
 
 class Model(torch.nn.Module):
@@ -41,7 +39,7 @@ for epoch in range(500):
 
     # Compute and print loss
     loss = criterion(y_pred, y_data)
-    print(epoch, loss.data[0])
+    print(epoch, loss.data)
 
     # Zero gradients, perform a backward pass, and update the weights.
     optimizer.zero_grad()
@@ -50,6 +48,6 @@ for epoch in range(500):
 
 
 # After training
-hour_var = Variable(torch.Tensor([[4.0]]))
+hour_var = torch.tensor([[4.0]])
 y_pred = model(hour_var)
 print("predict (after training)",  4, model(hour_var).data[0][0])

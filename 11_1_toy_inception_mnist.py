@@ -6,8 +6,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
 from torchvision import datasets, transforms
-from torch.autograd import Variable
-
+from torchsummary import summary
 # Training settings
 batch_size = 64
 
@@ -84,18 +83,19 @@ class Net(nn.Module):
         x = self.incept2(x)
         x = x.view(in_size, -1)  # flatten the tensor
         x = self.fc(x)
-        return F.log_softmax(x)
+        return nn.LogSoftmax()(x)
 
 
 model = Net()
-
+#summary(model, (1,28,28),device='cpu')
+summary(model.cuda(), (1,28,28))
 optimizer = optim.SGD(model.parameters(), lr=0.01, momentum=0.5)
 
 
 def train(epoch):
     model.train()
     for batch_idx, (data, target) in enumerate(train_loader):
-        data, target = Variable(data), Variable(target)
+        data,target=data.cuda(),target.cuda()
         optimizer.zero_grad()
         output = model(data)
         loss = F.nll_loss(output, target)
@@ -104,7 +104,7 @@ def train(epoch):
         if batch_idx % 10 == 0:
             print('Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}'.format(
                 epoch, batch_idx * len(data), len(train_loader.dataset),
-                100. * batch_idx / len(train_loader), loss.data[0]))
+                100. * batch_idx / len(train_loader), loss.data))
 
 
 def test():
@@ -112,10 +112,10 @@ def test():
     test_loss = 0
     correct = 0
     for data, target in test_loader:
-        data, target = Variable(data, volatile=True), Variable(target)
+        data,target=data.cuda(),target.cuda()
         output = model(data)
         # sum up batch loss
-        test_loss += F.nll_loss(output, target, size_average=False).data[0]
+        test_loss += F.nll_loss(output, target, reduction = 'sum').data
         # get the index of the max log-probability
         pred = output.data.max(1, keepdim=True)[1]
         correct += pred.eq(target.data.view_as(pred)).cpu().sum()

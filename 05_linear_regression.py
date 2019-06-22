@@ -1,4 +1,4 @@
-
+from torch import nn
 import torch
 from torch import tensor
 
@@ -6,8 +6,7 @@ x_data = tensor([[1.0], [2.0], [3.0]])
 y_data = tensor([[2.0], [4.0], [6.0]])
 
 
-class Model(torch.nn.Module):
-
+class Model(nn.Module):
     def __init__(self):
         """
         In the constructor we instantiate two nn.Linear module
@@ -24,9 +23,9 @@ class Model(torch.nn.Module):
         y_pred = self.linear(x)
         return y_pred
 
+
 # our model
 model = Model()
-
 
 # Construct our loss function and an Optimizer. The call to model.parameters()
 # in the SGD constructor will contain the learnable parameters of the two

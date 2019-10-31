@@ -1,6 +1,5 @@
 .idea
 *.key
-*.pdf
 .nsml*
 *.pt
 X*
@@ -9,5 +8,6 @@ ppts
 .ipynb_checkpoints
 client_secret.json
 __pycache__/
+.py*
 tmp
 template.pdf

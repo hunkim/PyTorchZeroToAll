@@ -1,11 +1,9 @@
 # References
 # https://github.com/yunjey/pytorch-tutorial/blob/master/tutorials/01-basics/pytorch_basics/main.py
 # http://pytorch.org/tutorials/beginner/data_loading_tutorial.html#dataset-class
-import torch
-import numpy as np
-from torch.autograd import Variable
 from torch.utils.data import Dataset, DataLoader
-
+from torch import from_numpy, tensor
+import numpy as np
 
 class DiabetesDataset(Dataset):
     """ Diabetes dataset."""
@@ -15,8 +13,8 @@ class DiabetesDataset(Dataset):
         xy = np.loadtxt('./data/diabetes.csv.gz',
                         delimiter=',', dtype=np.float32)
         self.len = xy.shape[0]
-        self.x_data = torch.from_numpy(xy[:, 0:-1])
-        self.y_data = torch.from_numpy(xy[:, [-1]])
+        self.x_data = from_numpy(xy[:, 0:-1])
+        self.y_data = from_numpy(xy[:, [-1]])
 
     def __getitem__(self, index):
         return self.x_data[index], self.y_data[index]
@@ -37,7 +35,7 @@ for epoch in range(2):
         inputs, labels = data
 
         # wrap them in Variable
-        inputs, labels = Variable(inputs), Variable(labels)
+        inputs, labels = tensor(inputs), tensor(labels)
 
         # Run your training process
-        print(epoch, i, "inputs", inputs.data, "labels", labels.data)
+        print(f'Epoch: {i} | Inputs {inputs.data} | Labels {labels.data}')

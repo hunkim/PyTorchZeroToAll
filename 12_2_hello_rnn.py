@@ -21,7 +21,7 @@ x_one_hot = [one_hot_lookup[x] for x in x_data]
 
 # As we have one batch of samples, we will change them to variables only once
 inputs = Variable(torch.Tensor(x_one_hot))
-labels = Variable(torch.LongTensor(y_data))
+labels = Variable(torch.LongTensor(y_data)).view(-1, 1)
 
 num_classes = 5
 input_size = 5  # one-hot size
@@ -77,7 +77,7 @@ for epoch in range(100):
         sys.stdout.write(idx2char[idx.data[0]])
         loss += criterion(output, label)
 
-    print(", epoch: %d, loss: %1.3f" % (epoch + 1, loss.data[0]))
+    print(", epoch: %d, loss: %1.3f" % (epoch + 1, loss.data))
 
     loss.backward()
     optimizer.step()

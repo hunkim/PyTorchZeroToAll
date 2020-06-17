@@ -27,8 +27,10 @@ num_layers = 1  # one-layer rnn
 
 class Model(nn.Module):
 
-    def __init__(self):
+    def __init__(self, num_layers, hidden_size):
         super(Model, self).__init__()
+        self.num_layers = num_layers
+        self.hidden_size = hidden_size
         self.embedding = nn.Embedding(input_size, embedding_size)
         self.rnn = nn.RNN(input_size=embedding_size,
                           hidden_size=5, batch_first=True)
@@ -51,7 +53,7 @@ class Model(nn.Module):
 
 
 # Instantiate RNN model
-model = Model()
+model = Model(num_layers, hidden_size)
 print(model)
 
 # Set loss and optimizer function
@@ -69,7 +71,7 @@ for epoch in range(100):
     _, idx = outputs.max(1)
     idx = idx.data.numpy()
     result_str = [idx2char[c] for c in idx.squeeze()]
-    print("epoch: %d, loss: %1.3f" % (epoch + 1, loss.data[0]))
+#     print("epoch: %d, loss: %1.3f" % (epoch + 1, loss.data[0]))  # this is the final bugs
     print("Predicted string: ", ''.join(result_str))
 
 print("Learning finished!")

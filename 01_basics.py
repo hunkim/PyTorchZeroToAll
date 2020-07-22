@@ -33,9 +33,9 @@ for w in np.arange(0.0, 4.1, 0.1):
         print("\t", x_val, y_val, y_pred_val, l)
     # Now compute the Mean squared error (mse) of each
     # Aggregate the weight/mse from this run
-    print("MSE=", l_sum / 3)
+    print("MSE=", l_sum / len(x_data))
     w_list.append(w)
-    mse_list.append(l_sum / 3)
+    mse_list.append(l_sum / len(x_data))
 
 # Plot it all
 plt.plot(w_list, mse_list)

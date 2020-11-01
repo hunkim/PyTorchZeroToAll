@@ -71,7 +71,7 @@ for epoch in range(100):
     _, idx = outputs.max(1)
     idx = idx.data.numpy()
     result_str = [idx2char[c] for c in idx.squeeze()]
-#     print("epoch: %d, loss: %1.3f" % (epoch + 1, loss.data[0]))  # this is the final bugs
+    print("epoch: %d, loss: %1.3f" % (epoch + 1, loss.item()))
     print("Predicted string: ", ''.join(result_str))
 
 print("Learning finished!")

@@ -40,7 +40,7 @@ class Model(nn.Module):
         # Initialize hidden and cell states
         # (num_layers * num_directions, batch, hidden_size)
         h_0 = Variable(torch.zeros(
-            self.num_layers, x.size(0), self.hidden_size))
+            num_layers, x.size(0), hidden_size))
 
         emb = self.embedding(x)
         emb = emb.view(batch_size, sequence_length, -1)

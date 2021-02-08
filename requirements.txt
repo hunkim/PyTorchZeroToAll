@@ -1,6 +1,6 @@
 #nonsml: digitalgenius/ubuntu-pytorch
 #varunagrawal/pytorch
-httplib2==0.18.0
+httplib2==0.19.0
 matplotlib==2.0.0
 numpy==1.13.3
 torch

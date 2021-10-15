@@ -114,7 +114,7 @@ for epoch in range(1, N_EPOCH + 1):
     for i, (srcs, targets) in enumerate(train_loader):
         train_loss = train(srcs[0], targets[0])  # Batch is 1
 
-        if i % 100 is 0:
+        if i % 100 == 0:
             print('[(%d %d%%) %.4f]' %
                   (epoch, epoch / N_EPOCH * 100, train_loss))
             print(translate(srcs[0]), '\n')
